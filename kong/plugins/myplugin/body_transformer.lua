@@ -116,33 +116,44 @@ end
 
 
 local function get_ai_output(input)
-  local client = http.new()
-  client:connect("https://httpbin.org", 80)
-  local ok, err = client:ssl_handshake()
-  if not ok then
-    return "NO!"
-  end
+  local httpc = http.new()
 
-  local res, err = client:request {
-    method = "GET",
-    path = "/get",
-    body = "",
-    headers = ""
-  }
+  --local res, err = httpc:request_uri("https://httpbin.org/get?a=1&b=2&c=" .. input)
+  local res, err = httpc:request_uri("https://api.openai.com/v1/chat/completions", {
+    method = "POST",
+    body = "{\"model\": \"gpt-3.5-turbo\",\"messages\": [{\"role\": \"system\",\"content\": \"Generate direct responses without conversation as JSON using this template: {\\\"response\\\": \\\"\\\"}\"},{\"role\": \"user\",\"content\": \"" .. input .. "\"}],\"max_tokens\": 50}",
+    headers = {
+      ["Content-Type"] = "application/json",
+      ["Authorization"] = "Bearer " .. "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",
+    },
+  })
   if not res then
-    return "NO!!"
+    kong.log.err("request failed: ", err)
+    return
   end
 
-  return res:read_body()
-end
+  --local bodyT = "{\n  \"id\": \"chatcmpl-81P2jHQXIXuVbdWXQZ90ChwH91Jdw\",\n  \"object\": \"chat.completion\",\n  \"created\": 1695345285,\n  \"model\": \"gpt-3.5-turbo-0613\",\n  \"choices\": [\n    {\n      \"index\": 0,\n      \"message\": {\n        \"role\": \"assistant\",\n        \"content\": \"How about \\\"Flinchwing\\\"? It could be a mythical creature that combines the characteristics of a\"\n      },\n      \"finish_reason\": \"length\"\n    }\n  ],\n  \"usage\": {\n    \"prompt_tokens\": 21,\n    \"completion_tokens\": 20,\n    \"total_tokens\": 41\n  }\n}"
+  --local res = { body = cjson_decode(bodyT) }
 
+  kong.log.warn("RESPONSE: ", res.body)
 
-function _M.transform_json_body(conf, buffered_data)
-  local json_body = parse_json(buffered_data)
+  local json_body = parse_json(res.body)
   if json_body == nil then
     return nil, "failed parsing json body"
   end
 
+  local response_json = parse_json(json_body.choices[1].message.content)
+  if response_json == nil then
+    return nil, "failed parsing json body"
+  end
+
+  --kong.log.warn("RESPONSE: ", res.body)
+  --kong.log.warn("choices: ", res.body.choices)
+  return response_json.response
+end
+
+
+function _M.transform_json_body(conf, json_body)
   -- remove key:value to body
   for _, name in iter(conf.remove.json) do
     json_body[name] = nil
@@ -171,10 +182,8 @@ function _M.transform_json_body(conf, buffered_data)
   -- add_with_ai new key:value to body
   for i, name, value in iter(conf.add_with_ai.json) do
     local ai_output = get_ai_output(value)
-    kong.log.warn("AI OUTPUT: " .. ai_output)
+    --kong.log.warn("AI OUTPUT: " .. ai_output)
     local v = json_value(ai_output, "string")
-    --local v = json_value("!!!!", "string")
-    kong.log.warn("Add with ai: " .. v)
     if not json_body[name] and v ~= nil then
       json_body[name] = v
     end
