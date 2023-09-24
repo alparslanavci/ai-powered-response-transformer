@@ -120,7 +120,13 @@ local function generate_input(json_body, value)
   end)
 end
 
-local function get_ai_output(input, max_tokens)
+local function get_ai_output(conf, input, max_tokens)
+  local api_key = conf.openai_api_key
+  if api_key == nil then
+    kong.log.err("no openai api key set")
+    return
+  end
+
   local httpc = http.new()
 
   local res, err = httpc:request_uri("https://api.openai.com/v1/chat/completions", {
@@ -128,11 +134,11 @@ local function get_ai_output(input, max_tokens)
     body = "{\"model\": \"gpt-3.5-turbo\",\"messages\": [{\"role\": \"system\",\"content\": \"Generate direct responses without conversation as JSON using this template: {\\\"response\\\": \\\"\\\"}\"},{\"role\": \"user\",\"content\": \"" .. input .. "\"}],\"max_tokens\": " .. max_tokens .. "}",
     headers = {
       ["Content-Type"] = "application/json",
-      ["Authorization"] = "Bearer " .. "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",
+      ["Authorization"] = "Bearer " .. api_key,
     },
   })
   if not res then
-    kong.log.err("request failed: ", err)
+    kong.log.err("openai request failed")
     return
   end
 
@@ -143,12 +149,14 @@ local function get_ai_output(input, max_tokens)
 
   local json_body = parse_json(res.body)
   if json_body == nil then
-    return nil, "failed parsing json body"
+    kong.log.err("json parse failed")
+    return
   end
 
   local response_json = parse_json(json_body.choices[1].message.content)
   if response_json == nil then
-    return nil, "failed parsing json body"
+    kong.log.err("json parse failed")
+    return
   end
 
   --kong.log.warn("RESPONSE: ", res.body)
@@ -187,7 +195,7 @@ function _M.transform_json_body(conf, json_body)
   for i, name, value in iter(conf.add_with_ai.json) do
     local input = generate_input(json_body, value)
     --kong.log.warn("INPUT: " .. input)
-    local ai_output = get_ai_output(input, conf.add_with_ai.max_tokens)
+    local ai_output = get_ai_output(conf, input, conf.add_with_ai.max_tokens)
     --kong.log.warn("AI OUTPUT: " .. ai_output)
     local v = json_value(ai_output, "string")
     if not json_body[name] and v ~= nil then

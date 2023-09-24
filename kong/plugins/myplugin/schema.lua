@@ -108,6 +108,10 @@ return {
           { replace = colon_string_record },
           { add = colon_string_record },
           { append = colon_string_record },
+          { openai_api_key = {
+            type = "string",
+            required = false,
+          } },
           { add_with_ai = ai_string_record },
         },
       },
