@@ -46,6 +46,20 @@ local string_record = {
 }
 
 
+local ai_string_record = {
+  type = "record",
+  fields = {
+    { json = string_array },
+    { headers = string_array },
+    { max_tokens = {
+      type = "string",
+      default = "50",
+      required = false,
+    } },
+  },
+}
+
+
 local colon_json_types_array = {
   type = "array",
   default = {},
@@ -94,7 +108,7 @@ return {
           { replace = colon_string_record },
           { add = colon_string_record },
           { append = colon_string_record },
-          { add_with_ai = string_record },
+          { add_with_ai = ai_string_record },
         },
       },
     },
