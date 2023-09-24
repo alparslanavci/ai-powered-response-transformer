@@ -114,11 +114,15 @@ local function iter(config_array)
   end, config_array, 0
 end
 
+local function generate_input(json_body, value)
+  return value:gsub("${([^}]+)}", function(param_name)
+    return json_body[param_name]
+  end)
+end
 
 local function get_ai_output(input)
   local httpc = http.new()
 
-  --local res, err = httpc:request_uri("https://httpbin.org/get?a=1&b=2&c=" .. input)
   local res, err = httpc:request_uri("https://api.openai.com/v1/chat/completions", {
     method = "POST",
     body = "{\"model\": \"gpt-3.5-turbo\",\"messages\": [{\"role\": \"system\",\"content\": \"Generate direct responses without conversation as JSON using this template: {\\\"response\\\": \\\"\\\"}\"},{\"role\": \"user\",\"content\": \"" .. input .. "\"}],\"max_tokens\": 50}",
@@ -181,7 +185,9 @@ function _M.transform_json_body(conf, json_body)
 
   -- add_with_ai new key:value to body
   for i, name, value in iter(conf.add_with_ai.json) do
-    local ai_output = get_ai_output(value)
+    local input = generate_input(json_body, value)
+    --kong.log.warn("INPUT: " .. input)
+    local ai_output = get_ai_output(input)
     --kong.log.warn("AI OUTPUT: " .. ai_output)
     local v = json_value(ai_output, "string")
     if not json_body[name] and v ~= nil then
