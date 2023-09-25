@@ -17,13 +17,8 @@ local ResponseTransformerHandler = {
   VERSION = "0.1", -- version in X.Y.Z format. Check hybrid-mode compatibility requirements.
 }
 
-
---function ResponseTransformerHandler:header_filter(conf)
---  transform_headers(conf, kong.response.get_headers())
---end
-
-
 function ResponseTransformerHandler:response(conf)
+  transform_headers(conf, kong.response.get_headers())
 
   if not is_body_transform_set(conf)
     or not is_json_body(kong.response.get_header("Content-Type"))
@@ -32,8 +27,6 @@ function ResponseTransformerHandler:response(conf)
   end
 
   local body = assert(kong.service.response.get_body())
-  kong.log.warn("HEADERS: " .. body.headersSize)
-
   local json_body, err = transform_json_body(conf, body)
   if err then
     kong.log.warn("body transform failed: " .. err)
@@ -44,24 +37,5 @@ function ResponseTransformerHandler:response(conf)
     Modified = "yes",
   })
 end
-
---function ResponseTransformerHandler:body_filter(conf)
---
---  if not is_body_transform_set(conf)
---    or not is_json_body(kong.response.get_header("Content-Type"))
---  then
---    return
---  end
---
---  local body = kong.response.get_raw_body()
---
---  local json_body, err = transform_json_body(conf, body)
---  if err then
---    kong.log.warn("body transform failed: " .. err)
---    return
---  end
---  return kong.response.set_raw_body(json_body)
---end
---
 
 return ResponseTransformerHandler

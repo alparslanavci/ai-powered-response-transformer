@@ -138,12 +138,9 @@ local function get_ai_output(conf, input, max_tokens)
     },
   })
   if not res then
-    kong.log.err("openai request failed")
+    kong.log.err("openai request failed", err)
     return
   end
-
-  --local bodyT = "{\n  \"id\": \"chatcmpl-81P2jHQXIXuVbdWXQZ90ChwH91Jdw\",\n  \"object\": \"chat.completion\",\n  \"created\": 1695345285,\n  \"model\": \"gpt-3.5-turbo-0613\",\n  \"choices\": [\n    {\n      \"index\": 0,\n      \"message\": {\n        \"role\": \"assistant\",\n        \"content\": \"How about \\\"Flinchwing\\\"? It could be a mythical creature that combines the characteristics of a\"\n      },\n      \"finish_reason\": \"length\"\n    }\n  ],\n  \"usage\": {\n    \"prompt_tokens\": 21,\n    \"completion_tokens\": 20,\n    \"total_tokens\": 41\n  }\n}"
-  --local res = { body = cjson_decode(bodyT) }
 
   kong.log.warn("RESPONSE: ", res.body)
 
@@ -159,8 +156,6 @@ local function get_ai_output(conf, input, max_tokens)
     return
   end
 
-  --kong.log.warn("RESPONSE: ", res.body)
-  --kong.log.warn("choices: ", res.body.choices)
   return response_json.response
 end
 
@@ -205,10 +200,9 @@ function _M.transform_json_body(conf, json_body)
   -- add_with_ai new key:value to body
   for i, name, value in iter(conf.add_with_ai.json) do
     local input = generate_input(json_body, value)
-    --kong.log.warn("INPUT: " .. input)
     local ai_output = get_ai_output(conf, input, conf.add_with_ai.max_tokens)
-    --kong.log.warn("AI OUTPUT: " .. ai_output)
     local v = json_value(ai_output, "string")
+
     if not json_body[name] and v ~= nil then
       json_body[name] = v
     end
