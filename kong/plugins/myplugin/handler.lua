@@ -33,9 +33,7 @@ function ResponseTransformerHandler:response(conf)
     return
   end
 
-  return kong.response.exit(kong.service.response.get_status(), json_body, {
-    Modified = "yes",
-  })
+  return kong.response.exit(kong.service.response.get_status(), json_body)
 end
 
 return ResponseTransformerHandler
