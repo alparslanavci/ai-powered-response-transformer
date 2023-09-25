@@ -67,6 +67,7 @@ local function is_body_transform_set(conf)
          not isempty(conf.add_with_ai.json ) or
          not isempty(conf.remove.json ) or
          not isempty(conf.replace.json) or
+         not isempty(conf.replace_with_ai.json ) or
          not isempty(conf.append.json )
 end
 

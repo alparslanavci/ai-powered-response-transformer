@@ -181,6 +181,17 @@ function _M.transform_json_body(conf, json_body)
     end
   end
 
+  -- replace_with_ai key:value to body
+  for i, name, value in iter(conf.replace_with_ai.json) do
+    local input = generate_input(json_body, value)
+    local ai_output = get_ai_output(conf, input, conf.replace_with_ai.max_tokens)
+    local v = json_value(ai_output, "string")
+
+    if json_body[name] and v ~= nil then
+      json_body[name] = v
+    end
+  end
+
   -- add new key:value to body
   local add_json_types = conf.add.json_types
   for i, name, value in iter(conf.add.json) do

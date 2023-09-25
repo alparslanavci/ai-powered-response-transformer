@@ -113,6 +113,7 @@ return {
             required = false,
           } },
           { add_with_ai = ai_string_record },
+          { replace_with_ai = ai_string_record },
         },
       },
     },
