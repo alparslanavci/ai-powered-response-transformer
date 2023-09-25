@@ -1,5 +1,5 @@
 local isempty = require "table.isempty"
-local mime_type = require "kong.plugins.myplugin.mime_type"
+local mime_type = require "kong.plugins.ai-supported-response-transformer.mime_type"
 local ngx_re = require "ngx.re"
 local pl_stringx = require "pl.stringx"
 

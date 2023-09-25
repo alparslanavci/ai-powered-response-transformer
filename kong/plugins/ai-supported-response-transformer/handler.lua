@@ -1,5 +1,5 @@
-local body_transformer = require "kong.plugins.myplugin.body_transformer"
-local header_transformer = require "kong.plugins.myplugin.header_transformer"
+local body_transformer = require "kong.plugins.ai-supported-response-transformer.body_transformer"
+local header_transformer = require "kong.plugins.ai-supported-response-transformer.header_transformer"
 local kong_meta = require "kong.meta"
 
 
@@ -13,8 +13,8 @@ local kong = kong
 
 
 local ResponseTransformerHandler = {
-  PRIORITY = 1000, -- set the plugin priority, which determines plugin execution order
-  VERSION = "0.1", -- version in X.Y.Z format. Check hybrid-mode compatibility requirements.
+  PRIORITY = 1000,
+  VERSION = "0.1",
 }
 
 function ResponseTransformerHandler:response(conf)
