@@ -142,8 +142,6 @@ local function get_ai_output(conf, input, max_tokens)
     return
   end
 
-  kong.log.warn("RESPONSE: ", res.body)
-
   local json_body = parse_json(res.body)
   if json_body == nil then
     kong.log.err("json parse failed")
