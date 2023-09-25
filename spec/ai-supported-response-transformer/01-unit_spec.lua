@@ -208,6 +208,10 @@ for _, strategy in helpers.each_strategy() do
                   json       = cjson.null,
                   json_types = cjson.null,
                 },
+                replace_with_ai = {
+                  headers    = cjson.null,
+                  json       = cjson.null,
+                },
                 add = {
                   headers    = cjson.null,
                   json       = cjson.null,
@@ -242,6 +246,10 @@ for _, strategy in helpers.each_strategy() do
               headers = "required field missing",
               json = "required field missing",
               json_types = "required field missing",
+            },
+            replace_with_ai = {
+              headers = "required field missing",
+              json = "required field missing",
             },
             add = {
               headers = "required field missing",
