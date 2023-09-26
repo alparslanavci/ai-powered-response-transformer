@@ -131,7 +131,7 @@ local function get_ai_output(conf, input, max_tokens)
 
   local res, err = httpc:request_uri("https://api.openai.com/v1/chat/completions", {
     method = "POST",
-    body = "{\"model\": \"gpt-3.5-turbo\",\"messages\": [{\"role\": \"system\",\"content\": \"Generate direct responses without conversation as JSON using this template: {\\\"response\\\": \\\"\\\"}\"},{\"role\": \"user\",\"content\": \"" .. input .. "\"}],\"max_tokens\": " .. max_tokens .. "}",
+    body = "{\"model\": \"gpt-3.5-turbo\",\"messages\": [{\"role\": \"system\",\"content\": \"Generate a direct single response without conversation.\"},{\"role\": \"user\",\"content\": \"" .. input .. "\"}],\"max_tokens\": " .. max_tokens .. "}",
     headers = {
       ["Content-Type"] = "application/json",
       ["Authorization"] = "Bearer " .. api_key,
@@ -148,13 +148,7 @@ local function get_ai_output(conf, input, max_tokens)
     return
   end
 
-  local response_json = parse_json(json_body.choices[1].message.content)
-  if response_json == nil then
-    kong.log.err("json parse failed")
-    return
-  end
-
-  return response_json.response
+  return json_body.choices[1].message.content
 end
 
 
