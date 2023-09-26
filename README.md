@@ -18,6 +18,7 @@ Whether you need to enrich your API responses with contextual information, gener
 
 - [Configuration](#configuration)
 - [Examples](#examples)
+- [Future Improvements](#future-improvements)
 - [License](#license)
 
 ## Configuration
@@ -42,6 +43,9 @@ This plugin inherits the configuration parameters from the [Kong Response Transf
 
 The following examples provide configurations for enabling the ai-powered-response-transformer plugin on a service:
 
+_Note:_ Replace `SERVICE_NAME|ID` with the id or name of the service that this plugin configuration will target. Also, the example presumes the response has `username`, `temp`, `humid` and `error` JSON fields in the body.
+
+**Declarative (YAML):**
 ```
 plugins:
 - name: ai-powered-response-transformer
@@ -55,6 +59,27 @@ plugins:
     replace_with_ai:
       json:
       - error:'Generate human readable message for this error: ${error}'
-      max_tokens: 20
+      max_tokens: 100
     openai_api_key: 0296217561490155228da9c17fc555cf9db82d159732f3206638c25f04a285c4
 ```
+
+**Kong Admin API:**
+```
+curl -X POST http://localhost:8001/services/{serviceName|Id}/plugins \
+    --data "name=ai-powered-response-transformer"  \
+    --data "config.add_with_ai.json=greeting:Generate a greeting message for ${username}."  \
+    --data "config.add_with_ai.json=weather:Generate a weather description for the temperature ${temp} and humidity ${humid}"  \
+    --data "config.add_with_ai.max_tokens=50"  \
+    --data "config.replace_with_ai.json=error:Generate human readable message for this error: ${error}"  \
+    --data "config.add_with_ai.max_tokens=100"  \
+    --data "config.openai_api_key=0296217561490155228da9c17fc555cf9db82d159732f3206638c25f04a285c4"
+```
+
+## Future Improvements
+Here are some future improvements planned for the plugin:
+
+- _Headers Transformation:_ Enhance the plugin to support additional header transformations, including adding, replacing, and appending headers to the response.
+- _Body Append:_ Extend the capabilities to append content to the response body, enabling even more dynamic and customized responses.
+- _Custom Language Model (LLM) Integration:_ Allow users to specify custom language models (LLMs) for response transformations. This feature will enable fine-grained control and specialized language models tailored to specific use cases.
+- _Request Transformation:_ Introduce support for request transformation, enabling users to preprocess incoming requests before they reach the upstream server. This can include modifying request parameters or headers based on AI-powered transformations.
+- _Comprehensive Testing:_ Expand the test suite to ensure robustness and reliability.
