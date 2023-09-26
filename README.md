@@ -19,7 +19,6 @@ Whether you need to enrich your API responses with contextual information, gener
 - [Configuration](#configuration)
 - [Examples](#examples)
 - [Future Improvements](#future-improvements)
-- [License](#license)
 
 ## Configuration
 
