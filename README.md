@@ -1,5 +1,5 @@
-[![Unix build](https://img.shields.io/github/actions/workflow/status/Kong/kong-plugin/test.yml?branch=master&label=Test&logo=linux)](https://github.com/Kong/kong-plugin/actions/workflows/test.yml)
-[![Luacheck](https://github.com/Kong/kong-plugin/workflows/Lint/badge.svg)](https://github.com/Kong/kong-plugin/actions/workflows/lint.yml)
+[![Unix build](https://img.shields.io/github/actions/workflow/status/alparslanavci/ai-powered-response-transformer/test.yml?branch=master&label=Test&logo=linux)](https://github.com/Kong/kong-plugin/actions/workflows/test.yml)
+[![Luacheck](https://github.com/alparslanavci/ai-powered-response-transformer/workflows/Lint/badge.svg)](https://github.com/Kong/kong-plugin/actions/workflows/lint.yml)
 
 Kong Plugin - AI-Powered Response Transformer
 ====================
