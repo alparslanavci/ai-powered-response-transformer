@@ -2,7 +2,7 @@ local helpers = require "spec.helpers"
 local cjson = require "cjson"
 
 for _, strategy in helpers.each_strategy() do
-  describe("Plugin: ai-supported-response-transformer (API) [#" .. strategy .. "]", function()
+  describe("Plugin: ai-powered-response-transformer (API) [#" .. strategy .. "]", function()
     local admin_client
 
     lazy_teardown(function()
@@ -21,7 +21,7 @@ for _, strategy in helpers.each_strategy() do
         assert(helpers.start_kong({
           database   = strategy,
           nginx_conf = "spec/fixtures/custom_nginx.template",
-          plugins    = "ai-supported-response-transformer"
+          plugins    = "ai-powered-response-transformer"
         }))
 
         admin_client = helpers.admin_client()
@@ -33,7 +33,7 @@ for _, strategy in helpers.each_strategy() do
             method  = "POST",
             path    = "/plugins",
             body    = {
-              name   = "ai-supported-response-transformer",
+              name   = "ai-powered-response-transformer",
               config = {
                 remove = {
                   headers = { "just_a_key" },
@@ -61,7 +61,7 @@ for _, strategy in helpers.each_strategy() do
             method  = "POST",
             path    = "/plugins",
             body    = {
-              name   = "ai-supported-response-transformer",
+              name   = "ai-powered-response-transformer",
               config = {
                 rename = {
                   headers = { rename_header },
@@ -87,7 +87,7 @@ for _, strategy in helpers.each_strategy() do
             method  = "POST",
             path    = "/plugins",
             body    = {
-              name   = "ai-supported-response-transformer",
+              name   = "ai-powered-response-transformer",
               config = {
                 rename = {
                   headers = { no_colons_header },
@@ -110,7 +110,7 @@ for _, strategy in helpers.each_strategy() do
             method  = "POST",
             path    = "/plugins",
             body    = {
-              name   = "ai-supported-response-transformer",
+              name   = "ai-powered-response-transformer",
               config = {
                 rename = {
                   headers = { rename_header },
@@ -131,7 +131,7 @@ for _, strategy in helpers.each_strategy() do
             method  = "POST",
             path    = "/plugins",
             body    = {
-              name   = "ai-supported-response-transformer",
+              name   = "ai-powered-response-transformer",
               config = {
                 add = {
                   headers = { "just_a_key" },
@@ -152,7 +152,7 @@ for _, strategy in helpers.each_strategy() do
             method  = "POST",
             path    = "/plugins",
             body    = {
-              name   = "ai-supported-response-transformer",
+              name   = "ai-powered-response-transformer",
               config = {
                 replace = {
                   headers = { "just_a_key" },
@@ -173,7 +173,7 @@ for _, strategy in helpers.each_strategy() do
             method  = "POST",
             path    = "/plugins",
             body    = {
-              name   = "ai-supported-response-transformer",
+              name   = "ai-powered-response-transformer",
               config = {
                 append = {
                   headers = { "just_a_key" },
@@ -194,7 +194,7 @@ for _, strategy in helpers.each_strategy() do
             method  = "POST",
             path    = "/plugins",
             body    = {
-              name   = "ai-supported-response-transformer",
+              name   = "ai-powered-response-transformer",
               config = {
                 remove    = {
                   headers    = cjson.null,

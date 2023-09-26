@@ -1,5 +1,5 @@
-local body_transformer = require "kong.plugins.ai-supported-response-transformer.body_transformer"
-local header_transformer = require "kong.plugins.ai-supported-response-transformer.header_transformer"
+local body_transformer = require "kong.plugins.ai-powered-response-transformer.body_transformer"
+local header_transformer = require "kong.plugins.ai-powered-response-transformer.header_transformer"
 
 local transform_headers = header_transformer.transform_headers
 local transform_json_body = body_transformer.transform_json_body
