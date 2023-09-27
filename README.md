@@ -16,6 +16,7 @@ Whether you need to enrich your API responses with contextual information, gener
 - [Configuration](#configuration)
 - [Examples](#examples)
 - [Future Improvements](#future-improvements)
+- [Demo Recording](#demo-recording)
 
 ## Configuration
 
@@ -79,3 +80,7 @@ Here are some future improvements planned for the plugin:
 - _Custom Language Model (LLM) Integration:_ Allow users to specify custom language models (LLMs) for response transformations. This feature will enable fine-grained control and specialized language models tailored to specific use cases.
 - _Request Transformation:_ Introduce support for request transformation, enabling users to preprocess incoming requests before they reach the upstream server. This can include modifying request parameters or headers based on AI-powered transformations.
 - _Comprehensive Testing:_ Expand the test suite to ensure robustness and reliability.
+
+## Demo Recording
+
+[Click here to watch demo recording.](https://drive.google.com/file/d/1B_B9zR2PWns2ORk2aq7iR7rQLPqIJMzG/view?usp=sharing)
